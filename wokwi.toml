@@ -1,0 +1,4 @@
+[wokwi]
+version = 1
+firmware = 'build/animacao-matriz-led-5x5.uf2'
+elf = 'build/animacao-matriz-led-5x5.elf'
