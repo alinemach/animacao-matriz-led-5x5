@@ -44,9 +44,14 @@ pico_set_program_version(animacao-matriz-led-5x5 "0.1")
 pico_enable_stdio_uart(animacao-matriz-led-5x5 1)
 pico_enable_stdio_usb(animacao-matriz-led-5x5 0)
 
+pico_generate_pio_header(animacao-matriz-led-5x5 ${CMAKE_CURRENT_LIST_DIR}/animacao-matriz-led-5x5.pio)
+
 # Add the standard library to the build
 target_link_libraries(animacao-matriz-led-5x5
-        pico_stdlib)
+        pico_stdlib
+        hardware_pio
+	    hardware_adc
+        pico_bootrom)
 
 # Add the standard include files to the build
 target_include_directories(animacao-matriz-led-5x5 PRIVATE
