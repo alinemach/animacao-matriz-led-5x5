@@ -39,6 +39,66 @@ char keys[ROWS][COLS] = {
     {'*', '0', '#', 'D'}
 };
 
+// Definição de pixel GRB
+struct npLED_t {
+  uint8_t G, R, B; // Três valores de 8-bits compõem um pixel.
+};
+typedef struct npLED_t npLED_t;
+
+// Variáveis para uso da máquina PIO.
+PIO np_pio;
+uint sm;
+
+npLED_t leds[NUM_PIXELS];
+
+// Inicializa a máquina PIO para controle da matriz de LEDs.
+void npInit(uint pin) {
+
+  // Cria programa PIO.
+  uint offset = pio_add_program(pio0, &pio_matrix_program);
+  np_pio = pio0;
+
+  // Toma posse de uma máquina PIO.
+  sm = pio_claim_unused_sm(np_pio, false);
+  if (sm < 0) {
+    np_pio = pio1;
+    sm = pio_claim_unused_sm(np_pio, true); // Se nenhuma máquina estiver livre, panic!
+  }
+  // Inicia programa na máquina PIO obtida.
+  pio_matrix_program_init(np_pio, sm, offset, pin);
+
+  // Limpa buffer de pixels.
+  for (uint i = 0; i < NUM_PIXELS; ++i) {
+    leds[i].R = 0;
+    leds[i].G = 0;
+    leds[i].B = 0;
+  }
+}
+
+// Atribui uma cor RGB a um LED. Index possui range (0, 25)
+void npSetLED(const uint index, const uint8_t r, const uint8_t g, const uint8_t b) {
+  leds[index].R = r;
+  leds[index].G = g;
+  leds[index].B = b;
+}
+
+// Limpa o buffer de pixels.
+void npClear() {
+  for (uint i = 0; i < NUM_PIXELS; ++i)
+    npSetLED(i, 0, 0, 0);
+}
+
+// Escreve os dados do buffer nos LEDs.
+void npWrite() {
+  // Escreve cada dado de 8-bits dos pixels em sequência no buffer da máquina PIO.
+  for (uint i = 0; i < NUM_PIXELS; ++i) {
+    pio_sm_put_blocking(np_pio, sm, leds[i].G);
+    pio_sm_put_blocking(np_pio, sm, leds[i].R);
+    pio_sm_put_blocking(np_pio, sm, leds[i].B);
+  }
+  sleep_us(100); // Espera 100us, sinal de RESET do datasheet.
+}
+
 // Função para inicializar o teclado
 void teclado_init() {
     for (int i = 0; i < ROWS; i++) {
@@ -93,10 +153,66 @@ void vermelho_pio(double *desenho, uint32_t valor_led, PIO pio, uint sm, double 
 
 void animacao2 ();
 
+void leds_all_blue_max() {
+    int position = 0;
+    int R = 0;
+    int G = 0;
+    int B = 255;
+    for (int row = 0; row < 5; row++) {
+        for (int col = 0; col < 5; col++) {
+            npSetLED(position, R, G, B);
+            position += 1;
+        }
+    }
+}
+
+void leds_all_red_80() {
+    int position = 0;
+    int R = (int)255*0.8;
+    int G = 0;
+    int B = 0;
+    for (int row = 0; row < 5; row++) {
+        for (int col = 0; col < 5; col++) {
+            npSetLED(position, R, G, B);
+            position += 1;
+        }
+    }
+}
+
+void leds_all_green_50() {
+    int position = 0;
+    int R = 0;
+    int G = (int)255*0.5;
+    int B = 0;
+    for (int row = 0; row < 5; row++) {
+        for (int col = 0; col < 5; col++) {
+            npSetLED(position, R, G, B);
+            position += 1;
+        }
+    }
+}
+
+void leds_all_white_20() {
+    int position = 0;
+    int val = (int)255*0.2;
+    int R = val;
+    int G = val;
+    int B = val;
+    for (int row = 0; row < 5; row++) {
+        for (int col = 0; col < 5; col++) {
+            npSetLED(position, R, G, B);
+            position += 1;
+        }
+    }
+}
+
 // Função principal
 int main() {
     // Inicializar o teclado matricial
+    stdio_init_all();
     teclado_init();
+
+    npInit(OUT_PIN);
 
     while (true) {
         char key = teclado_scan();  // Verifica qual tecla foi pressionada
@@ -105,6 +221,22 @@ int main() {
             printf("Tecla pressionada: %c\n", key);
             // Dependendo da tecla pressionada, aciona um desenho na matriz de LEDs
             switch (key) {
+                case 'A':
+                    npClear();
+                    npWrite();
+                    break;
+                case 'B':
+                    leds_all_blue_max();
+                    break;
+                case 'C':
+                    leds_all_red_80();
+                    break;
+                case 'D':
+                    leds_all_green_50();
+                    break;
+                case '#':
+                    leds_all_white_20();
+                    break;
                 case '2':
                     animacao2();
                     break;
