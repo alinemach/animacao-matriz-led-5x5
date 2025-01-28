@@ -164,6 +164,7 @@ void leds_all_blue_max() {
             position += 1;
         }
     }
+    npWrite();
 }
 
 void leds_all_red_80() {
@@ -177,6 +178,7 @@ void leds_all_red_80() {
             position += 1;
         }
     }
+    npWrite();
 }
 
 void leds_all_green_50() {
@@ -190,6 +192,7 @@ void leds_all_green_50() {
             position += 1;
         }
     }
+    npWrite();
 }
 
 void leds_all_white_20() {
@@ -204,19 +207,18 @@ void leds_all_white_20() {
             position += 1;
         }
     }
+    npWrite();
 }
 
 // Função principal
 int main() {
     // Inicializar o teclado matricial
     stdio_init_all();
-    teclado_init();
-
     npInit(OUT_PIN);
 
     while (true) {
+        teclado_init();
         char key = teclado_scan();  // Verifica qual tecla foi pressionada
-
         if (key != 0) {
             printf("Tecla pressionada: %c\n", key);
             // Dependendo da tecla pressionada, aciona um desenho na matriz de LEDs
