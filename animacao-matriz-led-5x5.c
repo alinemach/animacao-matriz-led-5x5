@@ -298,13 +298,13 @@ void BUZZER_CONFIG (uint gpio, float frequencia, float duty_cycle){
 
     float clk_div = 8.0f;  // DIVISOR DE CLOCK
     uint32_t wrap = (uint32_t)((125e6 / (frequencia * clk_div)) - 1);
-   
+
     // CONFIGURAÇÃO PWM
     pwm_config config = pwm_get_default_config();
     pwm_config_set_clkdiv(&config, clk_div);
     pwm_config_set_wrap(&config, wrap);
     pwm_init(slice_num, &config, true);
-    
+
     // CONFIGURAÇÃO DUTY_CICLE
      uint32_t level = (uint32_t)(wrap * duty_cycle);
     pwm_set_chan_level(slice_num, channel, level);
@@ -316,8 +316,8 @@ void CONTROLE_BUZZER(){
 
     BUZZER_CONFIG(BUZZER, DO, 0.5f); //CONFIGURA FREQUENCIA E DUTY_CYCLE
         sleep_ms(500);
-        
-        
+
+
         uint slice_num = pwm_gpio_to_slice_num(BUZZER);
         uint channel = pwm_gpio_to_channel(BUZZER);
         pwm_set_chan_level(slice_num, channel, 0);  //DESLIGAR BUZZER
@@ -343,7 +343,7 @@ RE, REh, MI, FA, SOL, SOLh, LA, LAh, SI}; // Array com as notas a serem tocadas
         BUZZER_CONFIG(BUZZER, notas[i], 0.5f); // Toca cada nota com duty cycle de 50%
         sleep_ms(200);  // Intervalo de 200ms entre as notas
         DESLIGAR_BUZZER();  // Desliga o buzzer após tocar a nota
-        
+
     }
 }
 
@@ -360,7 +360,7 @@ void TOCAR_SOM() {
 
     for (int i = 0; i < num_notas; i++) {
         BUZZER_CONFIG(BUZZER, notas[i], 0.5f); // Toca cada nota com duty cycle de 50%
-        sleep_ms(20);  // Intervalo de 150ms entre as notas        
+        sleep_ms(20);  // Intervalo de 150ms entre as notas
         DESLIGAR_BUZZER();  // Desliga o buzzer após tocar a nota
     }
     }
@@ -378,7 +378,7 @@ void TOCAR_SOM_FANTASMA() {
 
     for (int i = 0; i < num_notas; i++) {
         BUZZER_CONFIG(BUZZER, notas[i], 0.5f); // Toca cada nota com duty cycle de 50%
-        sleep_ms(10);  // Intervalo de 150ms entre as notas        
+        sleep_ms(10);  // Intervalo de 150ms entre as notas
         DESLIGAR_BUZZER();  // Desliga o buzzer após tocar a nota
 
         float notas[] = {DO}; // Array com as notas a serem tocadas
@@ -386,7 +386,7 @@ void TOCAR_SOM_FANTASMA() {
 
     for (int i = 0; i < num_notas; i++) {
         BUZZER_CONFIG(BUZZER, notas[i], 0.5f); // Toca cada nota com duty cycle de 50%
-        sleep_ms(120);  // Intervalo de 150ms entre as notas        
+        sleep_ms(120);  // Intervalo de 150ms entre as notas
         DESLIGAR_BUZZER();  // Desliga o buzzer após tocar a nota
 
         float notas[] = {0}; // Array com as notas a serem tocadas
@@ -394,7 +394,7 @@ void TOCAR_SOM_FANTASMA() {
 
     for (int i = 0; i < num_notas; i++) {
         BUZZER_CONFIG(BUZZER, notas[i], 0.5f); // Toca cada nota com duty cycle de 50%
-        sleep_ms(10);  // Intervalo de 150ms entre as notas        
+        sleep_ms(10);  // Intervalo de 150ms entre as notas
         DESLIGAR_BUZZER();  // Desliga o buzzer após tocar a nota
     }
     }
@@ -468,47 +468,13 @@ void FRAME6(){
     }
 }
 
-void LEDS() {
+void animacao1();
 
-  // Inicializa entradas e saídas.
-  stdio_init_all();
+void animacao2 ();
 
-  // Inicializa matriz de LEDs NeoPixel.
-  npInit1(LED_PIN);
-  npClear1();
+void animacao4();
 
-    // Atualiza os LEDs com o padrão da matriz.
-    FRAMEINICIAL();
-    npWrite1(); // Escreve os dados nos LEDs.
-    sleep_ms(1500); // Delay de 1 segundo antes de repetir.
-   for (int i=0; i<5; i++){
-    TOCAR_SOM();
-    FRAME1();
-    npWrite1();
-    sleep_ms(100);
-    FRAME2();
-    npWrite1();
-    sleep_ms(100);
-    FRAME3();
-    npWrite1();
-    sleep_ms(100);
-    FRAME4();
-    npWrite1();
-    sleep_ms(100);
-   }
-  for (int v=0; v<5; v++){
-    TOCAR_SOM_FANTASMA();
-    FRAME5();
-    npWrite1();
-    sleep_ms(500);
-    FRAME6();
-    npWrite1();
-    sleep_ms(500);
-  }
-  }
-
-
-
+//void animacao5();
 
 // Função para definir a intensidade das cores do LED
 uint32_t matrix_rgb(double b, double r, double g) {
@@ -543,13 +509,7 @@ void verde_pio(double *desenho, uint32_t valor_led, PIO pio, uint sm, double r, 
         }
 }
 
-void animacao1();
 
-void animacao2 ();
-
-void animacao4();
-
-//void animacao5();
 
 void leds_all_blue_max() {
     int position = 0;
@@ -608,6 +568,45 @@ void leds_all_white_20() {
     npWrite();
 }
 
+void LEDS() {
+
+  // Inicializa entradas e saídas.
+  stdio_init_all();
+
+  // Inicializa matriz de LEDs NeoPixel.
+  npInit1(LED_PIN);
+  npClear1();
+
+    // Atualiza os LEDs com o padrão da matriz.
+    FRAMEINICIAL();
+    npWrite1(); // Escreve os dados nos LEDs.
+    sleep_ms(1500); // Delay de 1 segundo antes de repetir.
+   for (int i=0; i<5; i++){
+    TOCAR_SOM();
+    FRAME1();
+    npWrite1();
+    sleep_ms(100);
+    FRAME2();
+    npWrite1();
+    sleep_ms(100);
+    FRAME3();
+    npWrite1();
+    sleep_ms(100);
+    FRAME4();
+    npWrite1();
+    sleep_ms(100);
+   }
+  for (int v=0; v<5; v++){
+    TOCAR_SOM_FANTASMA();
+    FRAME5();
+    npWrite1();
+    sleep_ms(500);
+    FRAME6();
+    npWrite1();
+    sleep_ms(500);
+  }
+  }
+
 // Função principal
 int main() {
     // Inicializar o teclado matricial
@@ -650,7 +649,7 @@ int main() {
                     npClear();
                     animacao4();
                     break;
-                /*case '5':
+               /* case '5':
                     npClear();
                     animacao5();
                     break;*/
@@ -672,50 +671,50 @@ void animacao1() {
     bool ok;
     uint32_t valor_led;
     double r = 1.0, g = 0.0, b = 0.0; // Vermelho
-    double letraE[25] = {0.5, 0.5, 0.5, 0.5, 0.5, 
-                         0.0, 0.0, 0.0, 0.0, 0.5, 
-                         0.5, 0.5, 0.5, 0.5, 0.0, 
-                         0.0, 0.0, 0.0, 0.0, 0.5, 
+    double letraE[25] = {0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.0, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.5, 0.5, 0.5, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 0.5,
                          0.5, 0.5, 0.5, 0.5, 0.5};
-    double letraM[25] = {0.5, 0.5, 0.0, 0.5, 0.5, 
-                         0.5, 0.0, 0.5, 0.0, 0.5, 
-                         0.5, 0.0, 0.5, 0.0, 0.5, 
-                         0.5, 0.0, 0.0, 0.0, 0.5, 
+    double letraM[25] = {0.5, 0.5, 0.0, 0.5, 0.5,
+                         0.5, 0.0, 0.5, 0.0, 0.5,
+                         0.5, 0.0, 0.5, 0.0, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
                          0.5, 0.0, 0.0, 0.0, 0.5};
-    double letraB[25] = {0.5, 0.5, 0.5, 0.5, 0.0, 
-                         0.5, 0.0, 0.0, 0.0, 0.5, 
-                         0.5, 0.5, 0.5, 0.5, 0.5, 
-                         0.5, 0.0, 0.0, 0.0, 0.5, 
+    double letraB[25] = {0.5, 0.5, 0.5, 0.5, 0.0,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
                          0.5, 0.5, 0.5, 0.5, 0.0};
-    double letraA[25] = {0.0, 0.5, 0.5, 0.5, 0.0, 
-                         0.5, 0.0, 0.0, 0.0, 0.5, 
-                         0.5, 0.5, 0.5, 0.5, 0.5, 
-                         0.5, 0.0, 0.0, 0.0, 0.5, 
+    double letraA[25] = {0.0, 0.5, 0.5, 0.5, 0.0,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
                          0.5, 0.0, 0.0, 0.0, 0.5};
-    double letraR[25] = {0.5, 0.5, 0.5, 0.5, 0.0, 
-                         0.5, 0.0, 0.0, 0.0, 0.5, 
-                         0.5, 0.5, 0.5, 0.5, 0.0, 
-                         0.5, 0.0, 0.0, 0.0, 0.5, 
+    double letraR[25] = {0.5, 0.5, 0.5, 0.5, 0.0,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.5, 0.5, 0.5, 0.0,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
                          0.5, 0.0, 0.0, 0.0, 0.5};
-    double letraC[25] = {0.5, 0.5, 0.5, 0.5, 0.5, 
-                         0.0, 0.0, 0.0, 0.0, 0.5, 
-                         0.5, 0.0, 0.0, 0.0, 0.0, 
-                         0.0, 0.0, 0.0, 0.0, 0.5, 
+    double letraC[25] = {0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.0, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 0.5,
                          0.5, 0.5, 0.5, 0.5, 0.5};
-    double letraT[25] = {0.5, 0.5, 0.5, 0.5, 0.5, 
-                         0.0, 0.0, 0.5, 0.0, 0.0, 
-                         0.0, 0.0, 0.5, 0.0, 0.0, 
-                         0.0, 0.0, 0.5, 0.0, 0.0, 
+    double letraT[25] = {0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.0, 0.0, 0.5, 0.0, 0.0,
+                         0.0, 0.0, 0.5, 0.0, 0.0,
+                         0.0, 0.0, 0.5, 0.0, 0.0,
                          0.0, 0.0, 0.5, 0.0, 0.0};
-    double letraH[25] = {0.5, 0.0, 0.0, 0.0, 0.5, 
-                         0.5, 0.0, 0.0, 0.0, 0.5, 
-                         0.5, 0.5, 0.5, 0.5, 0.5, 
-                         0.5, 0.0, 0.0, 0.0, 0.5, 
+    double letraH[25] = {0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
                          0.5, 0.0, 0.0, 0.0, 0.5};
-    double apagado[25] = {0.0, 0.0, 0.0, 0.0, 0.0, 
-                          0.0, 0.0, 0.0, 0.0, 0.0, 
-                          0.0, 0.0, 0.0, 0.0, 0.0, 
-                          0.0, 0.0, 0.0, 0.0, 0.0, 
+    double apagado[25] = {0.0, 0.0, 0.0, 0.0, 0.0,
+                          0.0, 0.0, 0.0, 0.0, 0.0,
+                          0.0, 0.0, 0.0, 0.0, 0.0,
+                          0.0, 0.0, 0.0, 0.0, 0.0,
                           0.0, 0.0, 0.0, 0.0, 0.0};
 
     ok = set_sys_clock_khz(128000, false); // Configura o clock
@@ -740,7 +739,7 @@ void animacao1() {
 }
 
 void animacao2 (){
-PIO pio = pio0; 
+PIO pio = pio0;
     bool ok;
     uint16_t i;
     uint32_t valor_led;
@@ -759,54 +758,54 @@ PIO pio = pio0;
 
 //vetores para criar animação "SUBGRUPO8" //
 double letraS[25] =   {0.5, 0.5, 0.5, 0.5, 0.5,
-                        0.0, 0.0, 0.0, 0.0, 0.5, 
+                        0.0, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.5, 0.5, 0.5, 0.5,
                         0.5, 0.0, 0.0, 0.0, 0.0,
                         0.5, 0.5, 0.5, 0.5, 0.5};
 double letraU[25] =   {0.5, 0.0, 0.0, 0.0, 0.5,
-                        0.5, 0.0, 0.0, 0.0, 0.5, 
+                        0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.5, 0.5, 0.5, 0.5};
 
 double letraB[25] =   {0.5, 0.5, 0.5, 0.5, 0.0,
-                        0.5, 0.0, 0.0, 0.0, 0.5, 
+                        0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.5, 0.5, 0.5, 0.5,
                         0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.5, 0.5, 0.5, 0.0};
 
 double letraG[25] =   {0.5, 0.5, 0.5, 0.5, 0.0,
-                        0.0, 0.0, 0.0, 0.0, 0.5, 
+                        0.0, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.0, 0.5, 0.5, 0.5,
                         0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.5, 0.5, 0.5, 0.5};
 
 double letraR[25] =   {0.5, 0.5, 0.5, 0.5, 0.0,
-                        0.5, 0.0, 0.0, 0.0, 0.5, 
+                        0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.5, 0.5, 0.5, 0.0,
                         0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.0, 0.0, 0.0, 0.5};
 
 double letraP[25] =   {0.5, 0.5, 0.5, 0.5, 0.0,
-                        0.5, 0.0, 0.0, 0.0, 0.5, 
+                        0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.5, 0.5, 0.5, 0.0,
                         0.0, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.0, 0.0, 0.0, 0.0};
 
 double letraO[25] =   {0.5, 0.5, 0.5, 0.5, 0.5,
-                        0.5, 0.0, 0.0, 0.0, 0.5, 
+                        0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.5, 0.5, 0.5, 0.5};
 
 double num8[25] =   {0.5, 0.5, 0.5, 0.5, 0.5,
-                        0.5, 0.0, 0.0, 0.0, 0.5, 
+                        0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.5, 0.5, 0.5, 0.5,
                         0.5, 0.0, 0.0, 0.0, 0.5,
                         0.5, 0.5, 0.5, 0.5, 0.5};
 
 double apagado[25] =   {0.0, 0.0, 0.0, 0.0, 0.0,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 
+                        0.0, 0.0, 0.0, 0.0, 0.0,
                         0.0, 0.0, 0.0, 0.0, 0.0,
                         0.0, 0.0, 0.0, 0.0, 0.0,
                         0.0, 0.0, 0.0, 0.0, 0.0};
