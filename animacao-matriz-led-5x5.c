@@ -527,9 +527,27 @@ void vermelho_pio(double *desenho, uint32_t valor_led, PIO pio, uint sm, double 
         }
 }
 
+//azul
+void azul_pio(double *desenho, uint32_t valor_led, PIO pio, uint sm, double r, double g, double b) {
+    for (int16_t i = 0; i < NUM_PIXELS; i++) {
+            valor_led = matrix_rgb(desenho[24 - i], r = 0.0, g = 0.0);
+            pio_sm_put_blocking(pio, sm, valor_led);
+        }
+}
+
+//verde
+void verde_pio(double *desenho, uint32_t valor_led, PIO pio, uint sm, double r, double g, double b) {
+    for (int16_t i = 0; i < NUM_PIXELS; i++) {
+            valor_led = matrix_rgb(b = 0.0, r = 0.0, desenho[24 - i]);
+            pio_sm_put_blocking(pio, sm, valor_led);
+        }
+}
+
 void animacao1();
 
 void animacao2 ();
+
+void animacao4();
 
 void leds_all_blue_max() {
     int position = 0;
@@ -623,9 +641,12 @@ int main() {
                 case '2':
                     animacao2();
                     break;
-
                 case '3':
                     LEDS();
+                    break;
+                case '4':
+                    npClear();
+                    animacao4();
                     break;
                 default:
                     // Caso nenhuma tecla seja pressionada, a matriz de LEDs é apagada
@@ -804,4 +825,101 @@ vermelho_pio(num8, valor_led, pio, sm, r, g, b);
 sleep_ms(500);
 vermelho_pio(apagado, valor_led, pio, sm, r, g, b);
 
+}
+void animacao4(){
+PIO pio = pio0;
+    bool ok;
+    uint16_t i;
+    uint32_t valor_led;
+    double r = 0.0, b = 0.0, g = 0.0;
+
+// Configura o clock do sistema
+    ok = set_sys_clock_khz(128000, false);
+    stdio_init_all();
+
+    if (ok) printf("Clock set to %ld\n", clock_get_hz(clk_sys));
+
+    // Configurações do PIO
+    uint offset = pio_add_program(pio, &pio_matrix_program);
+    uint sm = pio_claim_unused_sm(pio, true);
+    pio_matrix_program_init(pio, sm, offset, OUT_PIN);
+
+
+double letraE[25] = {0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.0,
+                         0.5, 0.5, 0.5, 0.5, 0.0,
+                         0.5, 0.0, 0.0, 0.0, 0.0,
+                         0.5, 0.5, 0.5, 0.5, 0.5};
+
+    double letraU[25] = {0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.5, 0.5, 0.5, 0.5};
+
+    double coracao[25] = {0.0, 0.5, 0.0, 0.5, 0.0,
+                          0.5, 0.5, 0.5, 0.5, 0.5,
+                          0.5, 0.5, 0.5, 0.5, 0.5,
+                          0.0, 0.5, 0.5, 0.5, 0.0,
+                          0.0, 0.0, 0.5, 0.0, 0.0};
+
+    double letraS[25] = {0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.0, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.0,
+                         0.5, 0.5, 0.5, 0.5, 0.5};
+
+    double letraI[25] = {0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.0, 0.0, 0.5, 0.0, 0.0,
+                         0.0, 0.0, 0.5, 0.0, 0.0,
+                         0.0, 0.0, 0.5, 0.0, 0.0,
+                         0.5, 0.5, 0.5, 0.5, 0.5};
+
+    double letraT[25] = {0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.0, 0.0, 0.5, 0.0, 0.0,
+                         0.0, 0.0, 0.5, 0.0, 0.0,
+                         0.0, 0.0, 5.0, 0.0, 0.0,
+                         0.0, 0.0, 5.0, 0.0, 0.0};
+
+    double letraM[25] = {0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.5, 0.0, 0.5, 0.5,
+                         0.5, 0.0, 0.5, 0.0, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5};
+
+    double letraA[25] = {0.0, 0.5, 0.5, 0.5, 0.0,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.5, 0.5, 0.5, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5,
+                         0.5, 0.0, 0.0, 0.0, 0.5};
+
+    double apagado[25] = {0.0, 0.0, 0.0, 0.0, 0.0,
+                          0.0, 0.0, 0.0, 0.0, 0.0,
+                          0.0, 0.0, 0.0, 0.0, 0.0,
+                          0.0, 0.0, 0.0, 0.0, 0.0,
+                          0.0, 0.0, 0.0, 0.0, 0.0};
+
+    //EU ♥ SISTEMAS
+
+    azul_pio(letraE, valor_led, pio, sm, r, g, b);
+    sleep_ms(500);
+    azul_pio(letraU, valor_led, pio, sm, r, g, b);
+    sleep_ms(500);
+    vermelho_pio(coracao, valor_led, pio, sm, r, g, b);
+    sleep_ms(500);
+    verde_pio(letraS, valor_led, pio, sm, r, g, b);
+    sleep_ms(500);
+    vermelho_pio(letraI, valor_led, pio, sm, r, g, b);
+    sleep_ms(500);
+    verde_pio(letraT, valor_led, pio, sm, r, g, b);
+    sleep_ms(500);
+    verde_pio(letraE, valor_led, pio, sm, r, g, b);
+    sleep_ms(500);
+    verde_pio(letraM, valor_led, pio, sm, r, g, b);
+    sleep_ms(500);
+    verde_pio(letraA, valor_led, pio, sm, r, g, b);
+    sleep_ms(500);
+    verde_pio(letraS, valor_led, pio, sm, r, g, b);
+    sleep_ms(500);
+    verde_pio(apagado, valor_led, pio, sm, r, g, b);
 }
