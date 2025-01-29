@@ -549,6 +549,8 @@ void animacao2 ();
 
 void animacao4();
 
+void animacao5();
+
 void leds_all_blue_max() {
     int position = 0;
     int R = 0;
@@ -647,6 +649,10 @@ int main() {
                 case '4':
                     npClear();
                     animacao4();
+                    break;
+                case '5':
+                    npClear();
+                    animacao5();
                     break;
                 default:
                     // Caso nenhuma tecla seja pressionada, a matriz de LEDs é apagada
