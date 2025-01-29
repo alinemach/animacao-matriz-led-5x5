@@ -60,16 +60,17 @@ Um vídeo demonstrando as animações na matriz de LEDs pode ser acessado [aqui]
 - **Animação de Ponto**: Um ponto se move de um canto ao outro da matriz, criando o efeito de "rastreamento".
 - **Animação de Linhas**: Linhas horizontais ou verticais de LEDs são acesas e apagadas sequencialmente.
 - **Desenhos**: Desenhos simples ou letras podem ser exibidos, com LEDs acesos nas posições corretas.
-      - **A**: Apaga todos os LEDS.
-      - **B**: Liga todos os LEDs na cor azul, no nível de intensidade de 100% da luminosidade máxima.
-      - **C**: Liga todos os LEDs na cor vermelha, no nível de intensidade de 80% da luminosidade máxima.
-      - **D**: Liga todos os LEDs na cor verde, no nível de intensidade de 50% da luminosidade máxima.
-      - **#**: Liga todos os LEDs na cor branca, no nível de intensidade de 20% da luminosidade máxima.
-      - **1**: Animação com o texto **EMBARCATECH** em vermelho.
-      - **2**: Animação com o texto **SUBGRUPO8** em vermelho.
-      - **3**: Animação do Pac-Man movendo a boca, correndo do fantasma com fundo sonoro.
-      - **4**: Animação com o texto **EU ♥ SISTEMAS** em azul, vermelho e verde.
-      - **5**: Animação com o texto **..**
+  
+- **A**: Apaga todos os LEDS.
+- **B**: Liga todos os LEDs na cor azul, no nível de intensidade de 100% da luminosidade máxima.
+- **C**: Liga todos os LEDs na cor vermelha, no nível de intensidade de 80% da luminosidade máxima.
+- **D**: Liga todos os LEDs na cor verde, no nível de intensidade de 50% da luminosidade máxima.
+- **#**: Liga todos os LEDs na cor branca, no nível de intensidade de 20% da luminosidade máxima.
+- **1**: Animação com o texto **EMBARCATECH** em vermelho.
+- **2**: Animação com o texto **SUBGRUPO8** em vermelho.
+- **3**: Animação do Pac-Man movendo a boca, correndo do fantasma com fundo sonoro.
+- **4**: Animação com o texto **EU ♥ SISTEMAS** em azul, vermelho e verde.
+- **5**: Animação com o texto **..**
  
 
 ## Licença
