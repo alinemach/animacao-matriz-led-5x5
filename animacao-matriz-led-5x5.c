@@ -12,7 +12,7 @@
 #include "animacao-matriz-led-5x5.pio.h"
 
 // UART defines
-// By default the stdout UART is `uart0`, so we will use the second one
+// By default the stdout UART is uart0, so we will use the second one
 #define UART_ID uart1
 #define BAUD_RATE 115200
 
@@ -151,6 +151,8 @@ void vermelho_pio(double *desenho, uint32_t valor_led, PIO pio, uint sm, double 
         }
 }
 
+void animacao1();
+
 void animacao2 ();
 
 void leds_all_blue_max() {
@@ -239,6 +241,9 @@ int main() {
                 case '#':
                     leds_all_white_20();
                     break;
+                case '1':
+                    animacao1();
+                    break;
                 case '2':
                     animacao2();
                     break;
@@ -253,6 +258,78 @@ int main() {
     }
 
     return 0;
+}
+
+void animacao1() {
+    PIO pio = pio0;
+    bool ok;
+    uint32_t valor_led;
+    double r = 1.0, g = 0.0, b = 0.0; // Vermelho
+    double letraE[25] = {0.5, 0.5, 0.5, 0.5, 0.5, 
+                         0.0, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.5, 0.5, 0.5, 0.0, 
+                         0.0, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.5, 0.5, 0.5, 0.5};
+    double letraM[25] = {0.5, 0.5, 0.0, 0.5, 0.5, 
+                         0.5, 0.0, 0.5, 0.0, 0.5, 
+                         0.5, 0.0, 0.5, 0.0, 0.5, 
+                         0.5, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.0, 0.0, 0.0, 0.5};
+    double letraB[25] = {0.5, 0.5, 0.5, 0.5, 0.0, 
+                         0.5, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.5, 0.5, 0.5, 0.5, 
+                         0.5, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.5, 0.5, 0.5, 0.0};
+    double letraA[25] = {0.0, 0.5, 0.5, 0.5, 0.0, 
+                         0.5, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.5, 0.5, 0.5, 0.5, 
+                         0.5, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.0, 0.0, 0.0, 0.5};
+    double letraR[25] = {0.5, 0.5, 0.5, 0.5, 0.0, 
+                         0.5, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.5, 0.5, 0.5, 0.0, 
+                         0.5, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.0, 0.0, 0.0, 0.5};
+    double letraC[25] = {0.5, 0.5, 0.5, 0.5, 0.5, 
+                         0.0, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.0, 0.0, 0.0, 0.0, 
+                         0.0, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.5, 0.5, 0.5, 0.5};
+    double letraT[25] = {0.5, 0.5, 0.5, 0.5, 0.5, 
+                         0.0, 0.0, 0.5, 0.0, 0.0, 
+                         0.0, 0.0, 0.5, 0.0, 0.0, 
+                         0.0, 0.0, 0.5, 0.0, 0.0, 
+                         0.0, 0.0, 0.5, 0.0, 0.0};
+    double letraH[25] = {0.5, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.5, 0.5, 0.5, 0.5, 
+                         0.5, 0.0, 0.0, 0.0, 0.5, 
+                         0.5, 0.0, 0.0, 0.0, 0.5};
+    double apagado[25] = {0.0, 0.0, 0.0, 0.0, 0.0, 
+                          0.0, 0.0, 0.0, 0.0, 0.0, 
+                          0.0, 0.0, 0.0, 0.0, 0.0, 
+                          0.0, 0.0, 0.0, 0.0, 0.0, 
+                          0.0, 0.0, 0.0, 0.0, 0.0};
+
+    ok = set_sys_clock_khz(128000, false); // Configura o clock
+    stdio_init_all();
+    if (ok) printf("Clock set to %ld\n", clock_get_hz(clk_sys));
+
+    uint offset = pio_add_program(pio, &pio_matrix_program);
+    uint sm = pio_claim_unused_sm(pio, true);
+    pio_matrix_program_init(pio, sm, offset, OUT_PIN);
+
+    // Vetor de letras para "EMBARCATECH"
+    double *letras[] = {letraE, letraM, letraB, letraA, letraR, letraC, letraA, letraT, letraE, letraC, letraH};
+    size_t total_letras = sizeof(letras) / sizeof(letras[0]);
+
+    // Exibição das letras
+    for (size_t i = 0; i < total_letras; i++) {
+        vermelho_pio(letras[i], valor_led, pio, sm, r, g, b);
+        sleep_ms(2000); // Pausa entre letras
+        vermelho_pio(apagado, valor_led, pio, sm, r, g, b); // Apaga entre letras
+        sleep_ms(200); // Pausa para apagar
+    }
 }
 
 void animacao2 (){
